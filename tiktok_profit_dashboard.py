@@ -18,7 +18,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import os
-from datetime as datetime
+from datetime import datetime
 from twilio.rest import Client  # pip install twilio for WhatsApp
 
 # Custom Theme (Brand Colors: Green for wins, Blue accents)
