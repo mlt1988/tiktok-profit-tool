@@ -154,6 +154,27 @@ def send_email_report(df, email, smtp_user, smtp_pass):
         msg.attach(attachment)
         
         server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(smtp_user, smtp_pass)
-        server.sendmail(smtp_user, email
+   def send_email_report(df, email, smtp_user, smtp_pass):
+       try:
+           msg = MIMEMultipart()
+           msg['From'] = smtp_user
+           msg['To'] = email
+           msg['Subject'] = f"Daily TikTok Winners - {datetime.now().strftime('%Y-%m-%d')}"
+
+           body = "Your top TikTok products report is attached!"
+           msg.attach(MIMEText(body, 'plain'))
+
+           csv = df.to_csv(index=False).encode()
+           attachment = MIMEBase('application', 'octet-stream')
+           attachment.set_payload(csv)
+           encoders.encode_base64(attachment)
+           attachment.add_header('Content-Disposition', 'attachment; filename=tiktok_winners.csv')
+           msg.attach(attachment)
+
+           server = smtplib.SMTP('smtp.gmail.com', 587)
+           server.starttls()
+           server.login(smtp_user, smtp_pass)
+           server.sendmail(smtp_user, email, msg.as_string())   # ← fixed: fixed parenthesis
+           server.quit()
+       except Exception as e:
+           st.error(f"Email failed: {e}")
